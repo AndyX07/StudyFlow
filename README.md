@@ -66,7 +66,3 @@ npm start
 ```
 
 - The frontend runs on `http://localhost:3000`.
-
-## License
-
-MIT License © 2025 Andy Xu

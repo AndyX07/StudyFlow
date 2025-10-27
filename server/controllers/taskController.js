@@ -1,19 +1,19 @@
 import Task from '../models/taskModel.js';
 import Course from '../models/courseModel.js';
 
-export const getTaskById = async (req, res) => {
+export const getTaskById = async (req, res, next) => {
     try {
         const task = await Task.findById(req.params.taskId);
         if (!task) {
-        return res.status(404).json({ message: 'Task not found' });
+          return res.status(404).json({ message: 'Task not found' });
         }
         res.json(task);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+      next(err);
     }
 };
 
-export const createTask = async (req, res) => {
+export const createTask = async (req, res, next) => {
   const { title, description, dueDate, status } = req.body;
   const { courseId } = req.params;
 
@@ -38,15 +38,15 @@ export const createTask = async (req, res) => {
     const newTask = await task.save();
     res.status(201).json(newTask);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const updateTask = async (req, res) => {
+export const updateTask = async (req, res, next) => {
   try {
     const updatedTask = await Task.findByIdAndUpdate(req.params.taskId, req.body, { new: true });
     res.json(updatedTask);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };

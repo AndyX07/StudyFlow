@@ -1,51 +1,57 @@
 import Course from '../models/courseModel.js';
 import Task from '../models/taskModel.js';
-
-export const getCourses = async (req, res) => {
+  
+export const getCourses = async (req, res, next) => {
   try {
     const courses = await Course.find({ user: req.user._id });
     res.json(courses);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-export const getCourse = async (req, res) => {
+export const getCourse = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
 
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      res.status(404);
+      throw new Error('Course not found');
     }
 
     if (course.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to view this course' });
+      res.status(403);
+      throw new Error('Not authorized to view this course');
     }
     res.json(course);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-export const getTasksByCourseId = async (req, res) => {
+export const getTasksByCourseId = async (req, res, next) => {
   const { id: courseId } = req.params;
 
   try {
     const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ message: 'Course not found' });
+    if (!course){
+      res.status(404);
+      throw new Error('Course not found');
+    }
 
     if (course.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to view tasks for this course' });
+      res.status(403);
+      throw new Error('Not authorized to view tasks for this course');
     }
 
     const tasks = await Task.find({ course: courseId });
     res.json(tasks);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-export const createCourse = async (req, res) => {
+export const createCourse = async (req, res, next) => {
   const { name, code, description } = req.body;
   const userId = req.user._id;
   const course = new Course({
@@ -59,29 +65,30 @@ export const createCourse = async (req, res) => {
     const newCourse = await course.save();
     res.status(201).json(newCourse);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const updateCourse = async (req, res) => {
+export const updateCourse = async (req, res, next) => {
   try {
     const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updatedCourse);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const deleteCourse = async (req, res) => {
+export const deleteCourse = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      res.status(404);
+      return next(new Error('Course not found'));
     }
 
     await Course.findByIdAndDelete(req.params.id);
     res.json({ message: 'Course deleted' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };

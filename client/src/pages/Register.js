@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api";
 import "../styles/main.css";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -10,17 +9,28 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      try{
+        const res = await API.get("/auth/me", { withCredentials: true });
+        if(res.data){
+          navigate("/dashboard");
+        }
+      } catch (err){
+        // no valid session
+      }
+    }
+    checkLoggedIn();
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/register", {
+      await API.post("/auth/register", {
         name,
         email,
         password,
       });
-      const { _id, token } = res.data;
-      Cookies.set("userId", _id, { expires: 7 });
-      Cookies.set("token", token, { expires: 7 });
       alert("Registration successful!");
       navigate('/dashboard');
     } catch (err) {

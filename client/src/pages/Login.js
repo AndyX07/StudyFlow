@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/main.css";
 import API from "../api";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +8,24 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      try{
+        const res = await API.get("/auth/me", { withCredentials: true });
+        if(res.data){
+          navigate("/dashboard");
+        }
+      } catch (err){
+        // no valid session
+      }
+    }
+    checkLoggedIn();
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post(
+      await API.post(
         "/auth/login",
         { email, password },
         { withCredentials: true }

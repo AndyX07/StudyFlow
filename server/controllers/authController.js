@@ -8,6 +8,25 @@ const generateToken = (userId) => {
   });
 };
 
+const parseJWTExpiryToMs = (exp) => {
+  const match = exp.match(/(\d+)([smhd])/);
+  if (!match) return 7 * 24 * 60 * 60 * 1000;
+  const value = parseInt(match[1], 10);
+  const unit = match[2];
+  switch (unit) {
+    case 's':
+      return value * 1000;
+    case 'm':
+      return value * 60 * 1000;
+    case 'h':
+      return value * 60 * 60 * 1000;
+    case 'd':
+      return value * 24 * 60 * 60 * 1000;
+    default:
+      return 7 * 24 * 60 * 60 * 1000;
+  }
+}
+
 export const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -32,7 +51,7 @@ export const registerUser = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: parseJWTExpiryToMs(process.env.JWT_EXPIRES_IN || '7d'),
     });
 
     res.status(201).json({
@@ -67,7 +86,7 @@ export const loginUser = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: parseJWTExpiryToMs(process.env.JWT_EXPIRES_IN || '7d'),
     });
 
     res.json({
@@ -80,12 +99,12 @@ export const loginUser = async (req, res, next) => {
   }
 };
 export const logoutUser = (req, res) => {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    });
-    res.status(200).json({ message: 'Logged out successfully' });
+  res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 };
 
 export const getCurUser = async (req, res) => {

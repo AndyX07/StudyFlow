@@ -6,7 +6,7 @@ A full-stack web app for course and task management with a React frontend, Node.
 
 - User authentication with JWT
 - Persistent data storage in MongoDB Atlas
-- Dockerized backend for easy local development
+- Fully Dockerized frontend and backend for easy local development
 
 ## Technologies Used
 
@@ -36,29 +36,18 @@ JWT_EXPIRES_IN="7d"
 
 ---
 
-### 2. Run Backend
+### 2. Run the App (Option 1: With Docker)
 
 ```
 docker-compose up --build -d
 ```
 
-- This builds and starts the backend server.  
-- The backend connects to MongoDB Atlas using the `DB_URI` in your `.env`.  
+- This builds and both frontend and backend containers
+- The frontend is accessible at `http://localhost:3000`.
 - Backend API will be accessible at `http://localhost:5000`.
-
-OR
-
-Navigate to the server directory and run the following commands:
-
-```
-npm install
-npm start
-```
-To run the backend without docker
-
 ---
 
-### 3. Run Frontend
+### 3. Run the App (Option 2: Without Docker)
 
 Open a new terminal, navigate to the `client` directory, and run:
 
@@ -68,3 +57,11 @@ npm start
 ```
 
 - The frontend runs on `http://localhost:3000`.
+
+Navigate to the `server` directory and run:
+
+```
+npm install
+npm start
+```
+- The backend runs on `http://localhost:5000`

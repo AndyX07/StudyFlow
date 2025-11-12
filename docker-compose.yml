@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  frontend:
+    build: ./client
+    container_name: studyflow-frontend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    depends_on:
+      - backend
   backend:
     build: ./server
     container_name: studyflow-backend

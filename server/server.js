@@ -8,6 +8,10 @@ import authRoutes from './routes/authRoutes.js';
 import {notFound, errorHandler} from './middleware/errorMiddleware.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import http from 'http';
+import { Server } from 'socket.io';
+import studyGroupRoutes from './routes/studyGroupRoutes.js';
+import { handleSocketConnection } from './sockets/socketHandler.js';
 
 dotenv.config();
 connectDB();
@@ -27,10 +31,23 @@ app.use('/courses', courseRoutes);
 app.use('/tasks', taskRoutes);
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
+app.use('/study-groups', studyGroupRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
+
+handleSocketConnection(io);
+
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

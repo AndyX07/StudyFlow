@@ -1,23 +1,33 @@
 # StudyFlow
 
-A full-stack web app for course and task management with a React frontend, Node.js backend, and MongoDB Atlas database.
+A full-stack web app for course and task management featuring real time group management and chat, with a React frontend, Node.js backend, and MongoDB Atlas database.
 
 ## Features
 
-- User authentication with JWT
-- Persistent data storage in MongoDB Atlas
-- Fully Dockerized frontend and backend for easy local development
+- **User Authentication**: Secure login and registration using JWT.
+- **Course & Task Management**: Create, update, and track courses and associated tasks.
+- **Real-Time Group Management**: Create study groups, add/remove members, and manage tasks in real-time.
+- **Group Chat**: Send and receive messages in real-time within study groups.
+- **Persistent Data**: Data is stored in MongoDB Atlas.
+- **Dockerized Setup**: Run both frontend and backend using Docker containers.
+- **RESTful API**: Fully structured API for future integrations or extensions.
 
 ## Technologies Used
 
 - Frontend: React.js
-- Backend: Node.js, Express.js
+- Backend: Node.js, Express.js, Socket.io
 - Database: MongoDB Atlas
 - Containerization: Docker
 
 ## Getting Started
 
 ### 1. Setup Environment Variables
+
+Create a `.env` file inside the `/client` folder with the following content:
+
+```env
+REACT_APP_BACKEND_URL=http://localhost:5000
+```
 
 Create a `.env` file inside the `/server` folder with the following content:
 

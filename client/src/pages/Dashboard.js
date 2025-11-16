@@ -51,9 +51,14 @@ const Dashboard = () => {
       ) : (
         <>
           <p>Welcome to your study dashboard!</p>
-          <button className="add-course-btn" onClick={() => setShowModal(true)}>
-            Add Course
-          </button>
+          <div className="dashboard-actions">
+            <button className="add-course-btn" onClick={() => setShowModal(true)}>
+              Add Course
+            </button>
+            <Link to="/study-groups" className="study-groups-btn">
+              <button className="study-groups-btn">View Study Groups</button>
+            </Link>
+          </div>
 
           <div className="courses-container">
             {courses.map((course) => (

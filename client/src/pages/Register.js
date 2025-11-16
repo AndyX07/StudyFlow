@@ -21,7 +21,7 @@ const Register = () => {
       }
     }
     checkLoggedIn();
-  }, [navigate]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

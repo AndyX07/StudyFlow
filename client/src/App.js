@@ -6,6 +6,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import CourseView from "./pages/CourseView";
 import NotFound from "./pages/NotFound";
+import StudyGroupList from "./components/StudyGroup/StudyGroupList";
+import StudyGroupDetails from "./components/StudyGroup/StudyGroupDetails";
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/course/:id" element={<CourseView />} />
+          <Route path="/study-groups" element={<StudyGroupList />} />
+          <Route path="/study-groups/:id" element={<StudyGroupDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

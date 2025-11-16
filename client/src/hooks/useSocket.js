@@ -41,19 +41,7 @@ export const useSocket = (groupId) => {
     };
   }, [groupId]);
 
-  const joinGroup = (newGroupId) => {
-    if (socket) {
-      socket.emit('join-group', newGroupId);
-    }
-  };
-
-  const leaveGroup = (oldGroupId) => {
-    if (socket) {
-      socket.emit('leave-group', oldGroupId);
-    }
-  };
-
-  const sendMessage = (groupId, message) => {
+  const emitSendMessage = (groupId, message) => {
     if (socket) {
       socket.emit('send-message', { groupId, message });
     }
@@ -89,13 +77,13 @@ export const useSocket = (groupId) => {
     }
   }
 
-  const startTyping = (groupId) => {
+  const emitStartTyping = (groupId) => {
     if (socket) {
       socket.emit('typing-start', { groupId });
     }
   };
 
-  const stopTyping = (groupId) => {
+  const emitStopTyping = (groupId) => {
     if (socket) {
       socket.emit('typing-stop', { groupId });
     }
@@ -104,15 +92,13 @@ export const useSocket = (groupId) => {
   return {
     socket,
     isConnected,
-    joinGroup,
-    leaveGroup,
-    sendMessage,
+    emitSendMessage,
     emitTaskCreated,
     emitTaskUpdated,
     emitTaskDeleted,
     emitMemberAdded,
     emitMemberRemoved,
-    startTyping,
-    stopTyping
+    emitStartTyping,
+    emitStopTyping
   };
 };

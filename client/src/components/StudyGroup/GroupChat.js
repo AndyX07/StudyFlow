@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-const GroupChat = ({ groupId, currentUser, socket }) => {
+const GroupChat = ({ groupId, currentUser, socket, emitSendMessage, emitStartTyping, emitStopTyping }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [typingUsers, setTypingUsers] = useState([]);
@@ -74,14 +74,14 @@ const GroupChat = ({ groupId, currentUser, socket }) => {
   const handleTyping = () => {
     if (!socket) return;
 
-    socket.emit('typing-start', { groupId });
+    emitStartTyping(groupId);
 
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      socket.emit('typing-stop', { groupId });
+        emitStopTyping(groupId);
     }, 2000);
   };
 
@@ -92,13 +92,13 @@ const GroupChat = ({ groupId, currentUser, socket }) => {
 
     try {
         const res = await axios.post(`${API_URL}/study-groups/${groupId}/messages`, {user: currentUser._id, username: currentUser.name, message: newMessage}, {withCredentials: true});
-        socket.emit('send-message', { groupId, message: res.data});
+        emitSendMessage(groupId, res.data);
 
         setNewMessage('');
         if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
         }
-        socket.emit('typing-stop', { groupId });
+        emitStopTyping(groupId);
     } catch (error) {
       console.error('Error sending message:', error);
       alert('Failed to send message');

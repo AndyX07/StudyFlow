@@ -23,7 +23,18 @@ const StudyGroupDetails = () => {
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
 
-  const { socket, isConnected, emitTaskCreated, emitTaskUpdated, emitTaskDeleted, emitMemberAdded, emitMemberRemoved } = useSocket(id);
+  const {
+    socket,
+    isConnected,
+    emitSendMessage,
+    emitTaskCreated,
+    emitTaskUpdated,
+    emitTaskDeleted,
+    emitMemberAdded,
+    emitMemberRemoved,
+    emitStartTyping,
+    emitStopTyping
+  } = useSocket(id);
 
   useEffect(() => {
     fetchGroup();
@@ -349,7 +360,13 @@ const StudyGroupDetails = () => {
       </div>
 
       {showChat ? (
-        <GroupChat groupId={id} currentUser={currentUser} socket={socket} />
+        <GroupChat
+            groupId={id}
+            currentUser={currentUser}
+            socket={socket}
+            emitSendMessage={emitSendMessage}
+            emitStartTyping={emitStartTyping}
+            emitStopTyping={emitStopTyping} />
       ) : (
         <>
           <div className="section">
